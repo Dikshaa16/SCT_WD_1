@@ -1,0 +1,630 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Interactive Navigation Menu with Scroll Effect - Enhanced
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f9fafb 0%, #e0e7ff 100%);
+    }
+    nav {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+      backdrop-filter: saturate(180%) blur(20px);
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+    nav a {
+      transition: color 0.3s ease, border-bottom-color 0.3s ease;
+    }
+    nav.scrolled {
+      background-color: #065f46; /* Tailwind emerald-800 */
+      box-shadow: 0 4px 15px rgba(6, 95, 70, 0.6);
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    nav.scrolled a {
+      color: #d1fae5; /* Tailwind emerald-100 */
+    }
+    nav.scrolled a:hover,
+    nav.scrolled a:focus {
+      color: #a3e635; /* Tailwind lime-400 */
+      border-bottom-color: #a3e635;
+    }
+    nav a {
+      color: #047857; /* Tailwind emerald-700 */
+      border-bottom: 3px solid transparent;
+      padding-bottom: 0.25rem;
+      font-weight: 600;
+    }
+    nav a:hover,
+    nav a:focus {
+      color: #10b981; /* Tailwind emerald-500 */
+      border-bottom-color: #10b981;
+    }
+    button#menu-btn {
+      transition: color 0.3s ease;
+      color: #047857; /* Tailwind emerald-700 */
+    }
+    button#menu-btn:hover,
+    button#menu-btn:focus {
+      color: #a3e635; /* Tailwind lime-400 */
+    }
+    /* Mobile menu background with subtle gradient */
+    #mobile-menu {
+      background: linear-gradient(135deg, #d9f99d 0%, #bbf7d0 100%);
+    }
+    /* Section backgrounds with images using <img> tags instead of background-image */
+    section#home > img.bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      border-radius: 0 0 3rem 3rem;
+      filter: brightness(0.45) saturate(1.2);
+    }
+    section#home > div.overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 95, 70, 0.75);
+      border-radius: 0 0 3rem 3rem;
+      z-index: 1;
+    }
+    #about img.bg-img,
+    #services img.bg-img,
+    #portfolio img.bg-img,
+    #news img.bg-img,
+    #contact img.bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2rem;
+      filter: brightness(0.85) saturate(1.1);
+      z-index: 0;
+    }
+    #about > div.content,
+    #services > div.content,
+    #portfolio > div.content,
+    #news > div.content,
+    #contact > div.content {
+      position: relative;
+      z-index: 10;
+      background: rgba(255 255 255 / 0.85);
+      border-radius: 2rem;
+      box-shadow: 0 10px 25px rgba(6, 95, 70, 0.15);
+      padding: 3rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    #about > div.content.visible,
+    #services > div.content.visible,
+    #portfolio > div.content.visible,
+    #news > div.content.visible,
+    #contact > div.content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Section padding adjustments for smaller screens */
+    @media (max-width: 768px) {
+      #home {
+        border-radius: 0;
+      }
+      #about img.bg-img,
+      #services img.bg-img,
+      #portfolio img.bg-img,
+      #news img.bg-img,
+      #contact img.bg-img {
+        border-radius: 0;
+        box-shadow: none;
+      }
+      #about > div.content,
+      #services > div.content,
+      #portfolio > div.content,
+      #news > div.content,
+      #contact > div.content {
+        border-radius: 0;
+        box-shadow: none;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+ </head>
+ <body class="min-h-screen flex flex-col">
+  <nav aria-label="Primary Navigation" class="fixed top-0 left-0 right-0 z-50 py-4 px-6 flex items-center justify-between shadow-sm" id="navbar" role="navigation">
+   <a aria-label="BlueWave homepage" class="text-2xl font-bold text-emerald-700 select-none flex items-center" href="#">
+    <img alt="Company logo, green square with white letter L" class="inline-block mr-2 align-middle rounded-md shadow-md" height="40" src="https://storage.googleapis.com/a1aa/image/60673430-cad0-4ef8-1375-3b332030b30c.jpg" width="40"/>
+    BlueWave
+   </a>
+   <button aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle menu" class="md:hidden focus:outline-none focus:ring-2 focus:ring-lime-400" id="menu-btn" type="button">
+    <i aria-hidden="true" class="fas fa-bars fa-lg">
+    </i>
+   </button>
+   <ul class="hidden md:flex space-x-8 text-lg font-semibold select-none" id="menu">
+    <li>
+     <a class="nav-link block py-1" href="#home" tabindex="0">
+      Home
+     </a>
+    </li>
+    <li>
+     <a class="nav-link block py-1" href="#about" tabindex="0">
+      About
+     </a>
+    </li>
+    <li>
+     <a class="nav-link block py-1" href="#services" tabindex="0">
+      Services
+     </a>
+    </li>
+    <li>
+     <a class="nav-link block py-1" href="#portfolio" tabindex="0">
+      Portfolio
+     </a>
+    </li>
+    <li>
+     <a class="nav-link block py-1" href="#news" tabindex="0">
+      News
+     </a>
+    </li>
+    <li>
+     <a class="nav-link block py-1" href="#contact" tabindex="0">
+      Contact
+     </a>
+    </li>
+   </ul>
+  </nav>
+  <!-- Mobile menu -->
+  <div aria-label="Mobile Navigation Menu" class="fixed top-16 left-0 right-0 shadow-md md:hidden hidden z-40 rounded-b-lg" id="mobile-menu" role="menu">
+   <ul class="flex flex-col space-y-4 p-6 text-emerald-700 font-semibold select-none">
+    <li>
+     <a class="block nav-link-mobile" href="#home" role="menuitem" tabindex="-1">
+      Home
+     </a>
+    </li>
+    <li>
+     <a class="block nav-link-mobile" href="#about" role="menuitem" tabindex="-1">
+      About
+     </a>
+    </li>
+    <li>
+     <a class="block nav-link-mobile" href="#services" role="menuitem" tabindex="-1">
+      Services
+     </a>
+    </li>
+    <li>
+     <a class="block nav-link-mobile" href="#portfolio" role="menuitem" tabindex="-1">
+      Portfolio
+     </a>
+    </li>
+    <li>
+     <a class="block nav-link-mobile" href="#news" role="menuitem" tabindex="-1">
+      News
+     </a>
+    </li>
+    <li>
+     <a class="block nav-link-mobile" href="#contact" role="menuitem" tabindex="-1">
+      Contact
+     </a>
+    </li>
+   </ul>
+  </div>
+  <main class="pt-24 flex-grow">
+   <section aria-label="Home section with welcome message and call to action" class="min-h-screen flex flex-col justify-center items-center px-6 text-center relative overflow-hidden" id="home" tabindex="-1">
+    <img alt="Beautiful green forest with sun rays shining through tall trees, peaceful nature landscape" class="bg-img" height="600" src="https://storage.googleapis.com/a1aa/image/5d136c5b-812d-4c50-7146-d46cd97b9348.jpg" width="1200"/>
+    <div class="overlay">
+    </div>
+    <h1 class="text-6xl font-extrabold mb-6 drop-shadow-lg max-w-4xl leading-tight text-emerald-100 relative z-10">
+     Welcome to BlueWave
+    </h1>
+    <p class="max-w-4xl text-2xl mb-10 drop-shadow-md font-light tracking-wide text-emerald-200 relative z-10">
+     Your trusted partner in innovative web solutions. Explore our services and portfolio to see how we can help your business grow.
+    </p>
+    <a class="inline-block bg-lime-400 hover:bg-lime-500 text-emerald-900 font-bold py-4 px-10 rounded-lg shadow-lg transition shadow-lime-400/50 relative z-10" href="#services" role="button" tabindex="0">
+     Explore Services
+    </a>
+  
+   </section>
+   <section aria-label="About us section with team image and description" class="py-24 px-8 max-w-7xl mx-auto relative" id="about" tabindex="-1">
+    <img alt="A diverse team of professionals collaborating in a modern office with laptops, coffee, and whiteboards" class="bg-img rounded-3xl" height="600" src="https://storage.googleapis.com/a1aa/image/f51c724b-9a84-450b-4a32-69a29dbff307.jpg" width="1200"/>
+    <div class="content grid md:grid-cols-2 gap-16 items-center">
+     <img alt="A diverse team of professionals collaborating in a modern office with laptops, coffee, and whiteboards" class="rounded-3xl shadow-lg w-full object-cover max-h-[450px]" height="450" src="https://storage.googleapis.com/a1aa/image/f51c724b-9a84-450b-4a32-69a29dbff307.jpg" width="600"/>
+     <div>
+      <h2 class="text-5xl font-bold mb-8 text-emerald-900">
+       About Us
+      </h2>
+      <p class="mb-6 text-xl leading-relaxed tracking-wide text-emerald-800">
+       BlueWave is a cutting-edge web development agency dedicated to delivering high-quality, scalable, and innovative digital solutions. Our team of experts combines creativity and technology to build websites and applications that drive business success.
+      </p>
+      <p class="mb-6 text-xl leading-relaxed tracking-wide text-emerald-800">
+       Founded in 2010, we have helped over 200 clients worldwide achieve their digital goals through custom web design, development, and marketing strategies.
+      </p>
+      <a class="inline-block bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transition shadow-emerald-700/50" href="#contact" role="button" tabindex="0">
+       Get in Touch
+      </a>
+     </div>
+    </div>
+   </section>
+   <section aria-label="Services section with icons and descriptions" class="py-24 px-8 max-w-7xl mx-auto relative" id="services" tabindex="-1">
+    <img alt="Technology abstract background with green and lime gradient shapes" class="bg-img rounded-3xl" height="600" src="https://storage.googleapis.com/a1aa/image/4e53834c-1b3d-4b74-5e94-45b9e5a94c69.jpg" width="1200"/>
+    <div class="content bg-gradient-to-r from-lime-100 to-lime-300 rounded-3xl p-12 shadow-2xl">
+     <h2 class="text-5xl font-bold mb-16 text-center text-emerald-900">
+      Our Services
+     </h2>
+     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
+      <div class="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center text-center hover:shadow-2xl transition cursor-pointer">
+       <i aria-hidden="true" class="fas fa-code fa-4x text-emerald-700 mb-8 drop-shadow-md">
+       </i>
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        Web Development
+       </h3>
+       <p class="text-lg leading-relaxed text-emerald-800">
+        Custom websites built with the latest technologies, optimized for performance and scalability.
+       </p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center text-center hover:shadow-2xl transition cursor-pointer">
+       <i aria-hidden="true" class="fas fa-paint-brush fa-4x text-emerald-700 mb-8 drop-shadow-md">
+       </i>
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        UI/UX Design
+       </h3>
+       <p class="text-lg leading-relaxed text-emerald-800">
+        Intuitive and engaging user interfaces designed to enhance user experience and increase conversions.
+       </p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center text-center hover:shadow-2xl transition cursor-pointer">
+       <i aria-hidden="true" class="fas fa-mobile-alt fa-4x text-emerald-700 mb-8 drop-shadow-md">
+       </i>
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        Mobile Apps
+       </h3>
+       <p class="text-lg leading-relaxed text-emerald-800">
+        Responsive and performant mobile applications for iOS and Android platforms.
+       </p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center text-center hover:shadow-2xl transition cursor-pointer">
+       <i aria-hidden="true" class="fas fa-search fa-4x text-emerald-700 mb-8 drop-shadow-md">
+       </i>
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        SEO Optimization
+       </h3>
+       <p class="text-lg leading-relaxed text-emerald-800">
+        Improve your website’s visibility and ranking on search engines with our expert SEO services.
+       </p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center text-center hover:shadow-2xl transition cursor-pointer">
+       <i aria-hidden="true" class="fas fa-cloud fa-4x text-emerald-700 mb-8 drop-shadow-md">
+       </i>
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        Cloud Solutions
+       </h3>
+       <p class="text-lg leading-relaxed text-emerald-800">
+        Scalable cloud infrastructure and services to support your business growth and reliability.
+       </p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center text-center hover:shadow-2xl transition cursor-pointer">
+       <i aria-hidden="true" class="fas fa-headset fa-4x text-emerald-700 mb-8 drop-shadow-md">
+       </i>
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        Support &amp; Maintenance
+       </h3>
+       <p class="text-lg leading-relaxed text-emerald-800">
+        Ongoing support and maintenance to keep your digital assets secure and up-to-date.
+       </p>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section aria-label="Portfolio section with project gallery" class="py-24 px-8 max-w-7xl mx-auto relative" id="portfolio" tabindex="-1">
+    <img alt="Portfolio gallery background with soft green and lime gradient shapes" class="bg-img rounded-3xl" height="600" src="https://storage.googleapis.com/a1aa/image/409aae47-659d-4a94-696f-c9143535a0d6.jpg" width="1200"/>
+    <div class="content bg-white bg-opacity-90 backdrop-blur-md rounded-3xl p-12 shadow-xl">
+     <h2 class="text-5xl font-bold mb-16 text-center text-emerald-900">
+      Portfolio
+     </h2>
+     <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-10">
+      <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition cursor-pointer">
+       <img alt="Screenshot of a modern e-commerce website with product listings and shopping cart" class="w-full h-56 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/4ab8fcc9-d5e0-4414-31bc-3ea1a32334a8.jpg" width="600"/>
+       <div class="p-6">
+        <h3 class="text-2xl font-semibold mb-3 text-emerald-900">
+         E-commerce Platform
+        </h3>
+        <p class="text-emerald-700">
+         Developed a scalable online store with integrated payment gateways and user-friendly interface.
+        </p>
+       </div>
+      </div>
+      <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition cursor-pointer">
+       <img alt="Screenshot of a corporate website homepage with hero image and navigation" class="w-full h-56 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/3f34b17d-863f-47ad-e445-b7543ebadf97.jpg" width="600"/>
+       <div class="p-6">
+        <h3 class="text-2xl font-semibold mb-3 text-emerald-900">
+         Corporate Website
+        </h3>
+        <p class="text-emerald-700">
+         Created a professional website for a multinational company with multilingual support.
+        </p>
+       </div>
+      </div>
+      <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition cursor-pointer">
+       <img alt="Screenshot of a mobile app dashboard showing analytics and user data" class="w-full h-56 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/9229133f-3727-46d0-abc0-f10149125a36.jpg" width="600"/>
+       <div class="p-6">
+        <h3 class="text-2xl font-semibold mb-3 text-emerald-900">
+         Mobile App Dashboard
+        </h3>
+        <p class="text-emerald-700">
+         Designed and developed a dashboard app for real-time analytics and user management.
+        </p>
+       </div>
+      </div>
+      <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition cursor-pointer">
+       <img alt="Screenshot of a personal portfolio website with project gallery and contact form" class="w-full h-56 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/b182f616-4c6a-459d-e315-afabb0961148.jpg" width="600"/>
+       <div class="p-6">
+        <h3 class="text-2xl font-semibold mb-3 text-emerald-900">
+         Personal Portfolio
+        </h3>
+        <p class="text-emerald-700">
+         Built a responsive portfolio website showcasing projects and skills for a freelance developer.
+        </p>
+       </div>
+      </div>
+      <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition cursor-pointer">
+       <img alt="Screenshot of a nonprofit organization website with donation and event sections" class="w-full h-56 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/59a43eac-1bcf-402e-1bcd-51cc492644c8.jpg" width="600"/>
+       <div class="p-6">
+        <h3 class="text-2xl font-semibold mb-3 text-emerald-900">
+         Nonprofit Website
+        </h3>
+        <p class="text-emerald-700">
+         Developed a website for a nonprofit with donation integration and event management.
+        </p>
+       </div>
+      </div>
+      <div class="rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition cursor-pointer">
+       <img alt="Screenshot of a blog website homepage with featured articles and categories" class="w-full h-56 object-cover" height="400" src="https://storage.googleapis.com/a1aa/image/c88e3f65-b1ed-45eb-e3db-b7d5c0a2d71a.jpg" width="600"/>
+       <div class="p-6">
+        <h3 class="text-2xl font-semibold mb-3 text-emerald-900">
+         Blog Website
+        </h3>
+        <p class="text-emerald-700">
+         Created a content-rich blog platform with easy-to-use CMS and social sharing features.
+        </p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section aria-label="Latest news section with articles and images" class="py-24 px-8 max-w-7xl mx-auto relative" id="news" tabindex="-1">
+    <img alt="News updates background with soft green and lime gradient shapes" class="bg-img rounded-3xl" height="600" src="https://storage.googleapis.com/a1aa/image/7c3e4c27-23d5-4c91-ea58-8f938efef372.jpg" width="1200"/>
+    <div class="content bg-gradient-to-r from-lime-200 to-lime-400 rounded-3xl p-12 shadow-2xl">
+     <h2 class="text-5xl font-bold mb-16 text-center text-emerald-900">
+      Latest News
+     </h2>
+     <div class="space-y-12 max-w-5xl mx-auto">
+      <article class="bg-white rounded-3xl shadow-lg p-8 hover:shadow-2xl transition cursor-pointer">
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        BlueWave Launches New AI-Powered Web Builder
+       </h3>
+       <p class="text-emerald-800 mb-6 text-lg leading-relaxed">
+        We are excited to announce the launch of our new AI-powered web builder that helps businesses create stunning websites in minutes.
+       </p>
+       <img alt="Screenshot of AI-powered web builder interface showing drag and drop features with futuristic UI" class="rounded-2xl w-full h-auto max-h-[400px] object-cover shadow-md" height="400" src="https://storage.googleapis.com/a1aa/image/b248f2e1-c1c6-406f-96ea-67d290db002c.jpg" width="800"/>
+       <p class="mt-6 text-sm text-emerald-700 font-semibold tracking-wide">
+        Published: June 10, 2024
+       </p>
+      </article>
+      <article class="bg-white rounded-3xl shadow-lg p-8 hover:shadow-2xl transition cursor-pointer">
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        BlueWave Partners with CloudX for Enhanced Cloud Services
+       </h3>
+       <p class="text-emerald-800 mb-6 text-lg leading-relaxed">
+        Our new partnership with CloudX will provide clients with more reliable and scalable cloud infrastructure solutions.
+       </p>
+       <img alt="Image showing handshake between two business partners with cloud icons and digital network background" class="rounded-2xl w-full h-auto max-h-[400px] object-cover shadow-md" height="400" src="https://storage.googleapis.com/a1aa/image/c6788577-74b3-4b8f-0cf5-94fd0abba56e.jpg" width="800"/>
+       <p class="mt-6 text-sm text-emerald-700 font-semibold tracking-wide">
+        Published: May 22, 2024
+       </p>
+      </article>
+      <article class="bg-white rounded-3xl shadow-lg p-8 hover:shadow-2xl transition cursor-pointer">
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        BlueWave Wins Best Web Agency Award 2024
+       </h3>
+       <p class="text-emerald-800 mb-6 text-lg leading-relaxed">
+        We are honored to receive the Best Web Agency Award for our outstanding work and client satisfaction.
+       </p>
+       <img alt="Photo of BlueWave team receiving the Best Web Agency Award on stage with trophy and applause" class="rounded-2xl w-full h-auto max-h-[400px] object-cover shadow-md" height="400" src="https://storage.googleapis.com/a1aa/image/88489e6e-476a-43c6-e9a3-5e4a2e15452d.jpg" width="800"/>
+       <p class="mt-6 text-sm text-emerald-700 font-semibold tracking-wide">
+        Published: April 15, 2024
+       </p>
+      </article>
+      <article class="bg-white rounded-3xl shadow-lg p-8 hover:shadow-2xl transition cursor-pointer">
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        New Mobile App Released for Client Project Management
+       </h3>
+       <p class="text-emerald-800 mb-6 text-lg leading-relaxed">
+        Our new mobile app helps clients track project progress and communicate with our team seamlessly.
+       </p>
+       <img alt="Screenshot of mobile app showing project management dashboard and chat interface with modern UI" class="rounded-2xl w-full h-auto max-h-[400px] object-cover shadow-md" height="400" src="https://storage.googleapis.com/a1aa/image/ccf592ab-ccf4-4625-31e9-91f107ffe68b.jpg" width="800"/>
+       <p class="mt-6 text-sm text-emerald-700 font-semibold tracking-wide">
+        Published: March 30, 2024
+       </p>
+      </article>
+      <article class="bg-white rounded-3xl shadow-lg p-8 hover:shadow-2xl transition cursor-pointer">
+       <h3 class="text-3xl font-semibold mb-4 text-emerald-900">
+        BlueWave Expands Team with New Designers and Developers
+       </h3>
+       <p class="text-emerald-800 mb-6 text-lg leading-relaxed">
+        We are growing! Meet the talented new members who joined our team this quarter.
+       </p>
+       <img alt="Group photo of new designers and developers joining BlueWave team in modern office" class="rounded-2xl w-full h-auto max-h-[400px] object-cover shadow-md" height="400" src="https://storage.googleapis.com/a1aa/image/7e358c13-584b-4783-270c-442ac551fe9e.jpg" width="800"/>
+       <p class="mt-6 text-sm text-emerald-700 font-semibold tracking-wide">
+        Published: March 10, 2024
+       </p>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section aria-label="Contact us section with form and contact details" class="py-24 px-8 max-w-4xl mx-auto relative" id="contact" tabindex="-1">
+    <img alt="Contact us background with soft green and lime gradient shapes" class="bg-img rounded-3xl" height="600" src="https://storage.googleapis.com/a1aa/image/019071f4-bfa1-4846-075e-83d05787dc9b.jpg" width="1200"/>
+    <div class="content">
+     <h2 class="text-5xl font-bold mb-12 text-center text-emerald-900">
+      Contact Us
+     </h2>
+     <form action="#" aria-label="Contact form to reach BlueWave" class="space-y-8" method="POST" novalidate="">
+      <div>
+       <label class="block mb-3 font-semibold text-xl text-emerald-900" for="name">
+        Full Name
+       </label>
+       <input aria-describedby="name-desc" aria-required="true" class="w-full border border-gray-300 rounded-xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-emerald-600 focus:border-transparent text-lg" id="name" name="name" placeholder="Your full name" required="" type="text"/>
+       <p class="sr-only" id="name-desc">
+        Enter your full name
+       </p>
+      </div>
+      <div>
+       <label class="block mb-3 font-semibold text-xl text-emerald-900" for="email">
+        Email Address
+       </label>
+       <input aria-describedby="email-desc" aria-required="true" class="w-full border border-gray-300 rounded-xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-emerald-600 focus:border-transparent text-lg" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+       <p class="sr-only" id="email-desc">
+        Enter your email address
+       </p>
+      </div>
+      <div>
+       <label class="block mb-3 font-semibold text-xl text-emerald-900" for="message">
+        Message
+       </label>
+       <textarea aria-describedby="message-desc" aria-required="true" class="w-full border border-gray-300 rounded-xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-emerald-600 focus:border-transparent text-lg resize-y min-h-[140px]" id="message" name="message" placeholder="Write your message here..." required="" rows="5"></textarea>
+       <p class="sr-only" id="message-desc">
+        Write your message
+       </p>
+      </div>
+      <button aria-label="Send message to BlueWave" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 px-12 rounded-xl shadow-lg transition w-full md:w-auto" type="submit">
+       Send Message
+      </button>
+     </form>
+     <div class="mt-16 text-center text-emerald-700 space-y-4 select-text">
+      <p class="flex items-center justify-center space-x-3 text-lg font-semibold">
+       <i aria-hidden="true" class="fas fa-map-marker-alt text-emerald-600 text-2xl">
+       </i>
+       <span>
+        123 BlueWave St, San Francisco, CA 94105
+       </span>
+      </p>
+      <p class="flex items-center justify-center space-x-3 text-lg font-semibold">
+       <i aria-hidden="true" class="fas fa-phone text-emerald-600 text-2xl">
+       </i>
+       <span>
+        +1 (555) 123-4567
+       </span>
+      </p>
+      <p class="flex items-center justify-center space-x-3 text-lg font-semibold">
+       <i aria-hidden="true" class="fas fa-envelope text-emerald-600 text-2xl">
+       </i>
+       <span>
+        contact@bluewave.com
+       </span>
+      </p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-emerald-100 py-8 text-center select-none">
+   <p class="text-lg font-semibold tracking-wide">
+    © 2024 BlueWave. All rights reserved. Designed and developed with
+    <i aria-hidden="true" class="fas fa-heart text-lime-400 mx-1">
+    </i>
+    by BlueWave Team.
+   </p>
+  </footer>
+  <script>
+   const navbar = document.getElementById('navbar');
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinksMobile = document.querySelectorAll('.nav-link-mobile');
+
+    // Toggle mobile menu visibility and update aria-expanded
+    menuBtn.addEventListener('click', () => {
+      const expanded = menuBtn.getAttribute('aria-expanded') === 'true' || false;
+      menuBtn.setAttribute('aria-expanded', !expanded);
+      mobileMenu.classList.toggle('hidden');
+      menuBtn.querySelector('i').classList.toggle('fa-bars');
+      menuBtn.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // Close mobile menu when clicking a link
+    navLinksMobile.forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', false);
+        menuBtn.querySelector('i').classList.add('fa-bars');
+        menuBtn.querySelector('i').classList.remove('fa-times');
+      });
+    });
+
+    // Change navbar style on scroll
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Highlight active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    function activateNavLinkOnScroll() {
+      let scrollY = window.pageYOffset;
+      sections.forEach((section) => {
+        const sectionHeight = section.offsetHeight;
+        const sectionTop = section.offsetTop - 90;
+        const sectionId = section.getAttribute('id');
+        if (
+          scrollY > sectionTop &&
+          scrollY <= sectionTop + sectionHeight
+        ) {
+          navLinks.forEach((link) => {
+            link.classList.remove('border-lime-400');
+            if (link.getAttribute('href') === '#' + sectionId) {
+              link.classList.add('border-lime-400');
+            }
+          });
+          navLinksMobile.forEach((link) => {
+            link.classList.remove('text-lime-400');
+            if (link.getAttribute('href') === '#' + sectionId) {
+              link.classList.add('text-lime-400');
+            }
+          });
+        }
+      });
+    }
+    window.addEventListener('scroll', activateNavLinkOnScroll);
+    window.addEventListener('load', activateNavLinkOnScroll);
+
+    // Scroll animation for content divs after home section
+    const animatedContents = document.querySelectorAll('#about > div.content, #services > div.content, #portfolio > div.content, #news > div.content, #contact > div.content');
+
+    function animateOnScroll() {
+      const triggerBottom = window.innerHeight * 0.85;
+
+      animatedContents.forEach(content => {
+        const contentTop = content.getBoundingClientRect().top;
+
+        if(contentTop < triggerBottom) {
+          content.classList.add('visible');
+        } else {
+          content.classList.remove('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('load', animateOnScroll);
+  </script>
+ </body>
+</html>
